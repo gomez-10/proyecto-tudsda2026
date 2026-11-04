@@ -4,13 +4,14 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const ingresar = () => {
-    console.log("Usuario:", username);
-    console.log("Contraseña:", password);
+const ingresar = () => {
+  if (!username || !password) {
+    alert("Debe completar usuario y contraseña");
+    return;
+  }
 
-    alert("Login ejecutado");
-  };
-
+  alert(`Bienvenido ${username}`);
+};
   return (
     <div style={{ padding: "20px" }}>
       <h1>🔐 Login del Kiosco</h1>
