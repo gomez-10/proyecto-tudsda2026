@@ -1,13 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Usuarios() {
   const [username, setUsername] = useState("");
+  const [usuarios, setUsuarios] = useState([]);
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("admin");
+  const cargarUsuarios = async () => {
+  try {
+    const token = localStorage.getItem("authorizationToken");
+
+    const response = await fetch(
+      "http://localhost:3000/api/users",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    setUsuarios(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const crearUsuario = async () => {
+    <hr />
     try {
       const response = await fetch("http://localhost:3000/api/users", {
         method: "POST",
