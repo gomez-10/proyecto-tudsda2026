@@ -33,8 +33,6 @@ export default function HomeScreen() {
 
  <Pressable
   style={styles.boton}
-  onPress={() => router.push("/login")}
->
   onPress={() => router.push("/productos")}
 >
   <Text style={styles.textoBoton}>
