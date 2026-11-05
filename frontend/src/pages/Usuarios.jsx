@@ -74,56 +74,131 @@ export default function Usuarios() {
     }
   };
 
+  const editarUsuario = async (username, role) => {
+    try {
+      const token = localStorage.getItem(
+        "authorizationToken"
+      );
+
+      const nuevoRol =
+        role === "admin" ? "user" : "admin";
+
+      await fetch(
+        `http://localhost:3000/api/users/${username}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            role: nuevoRol,
+          }),
+        }
+      );
+
+      alert(
+        `Rol actualizado a ${nuevoRol}`
+      );
+
+      cargarUsuarios();
+    } catch (error) {
+      console.error(error);
+      alert("Error al editar usuario");
+    }
+  };
+
+  const eliminarUsuario = async (username) => {
+    try {
+      const token = localStorage.getItem(
+        "authorizationToken"
+      );
+
+      await fetch(
+        `http://localhost:3000/api/users/${username}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Usuario eliminado");
+
+      cargarUsuarios();
+    } catch (error) {
+      console.error(error);
+      alert("Error al eliminar usuario");
+    }
+  };
+
   return (
     <div style={{ padding: "20px" }}>
       <h1>👤 Crear Usuario</h1>
 
-      <p>
-        Token guardado: {localStorage.getItem("authorizationToken")}
-      </p>
-
       <input
         placeholder="Usuario"
         value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={(e) =>
+          setUsername(e.target.value)
+        }
       />
 
-      <br /><br />
+      <br />
+      <br />
 
       <input
         placeholder="Nombre para mostrar"
         value={displayName}
-        onChange={(e) => setDisplayName(e.target.value)}
+        onChange={(e) =>
+          setDisplayName(e.target.value)
+        }
       />
 
-      <br /><br />
+      <br />
+      <br />
 
       <input
         placeholder="Email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) =>
+          setEmail(e.target.value)
+        }
       />
 
-      <br /><br />
+      <br />
+      <br />
 
       <input
         type="password"
         placeholder="Contraseña"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) =>
+          setPassword(e.target.value)
+        }
       />
 
-      <br /><br />
+      <br />
+      <br />
 
       <select
         value={role}
-        onChange={(e) => setRole(e.target.value)}
+        onChange={(e) =>
+          setRole(e.target.value)
+        }
       >
-        <option value="admin">admin</option>
-        <option value="user">user</option>
+        <option value="admin">
+          admin
+        </option>
+
+        <option value="user">
+          user
+        </option>
       </select>
 
-      <br /><br />
+      <br />
+      <br />
 
       <button onClick={crearUsuario}>
         Crear Usuario
@@ -133,13 +208,17 @@ export default function Usuarios() {
 
       <h2>Usuarios registrados</h2>
 
-      <table border="1" cellPadding="10">
+      <table
+        border="1"
+        cellPadding="10"
+      >
         <thead>
           <tr>
             <th>Usuario</th>
             <th>Nombre</th>
             <th>Email</th>
             <th>Rol</th>
+            <th>Acciones</th>
           </tr>
         </thead>
 
@@ -150,6 +229,35 @@ export default function Usuarios() {
               <td>{usuario.displayName}</td>
               <td>{usuario.email}</td>
               <td>{usuario.role}</td>
+
+              <td>
+                <button
+                  onClick={() =>
+                    editarUsuario(
+                      usuario.username,
+                      usuario.role
+                    )
+                  }
+                >
+                  Editar Rol
+                </button>
+
+                <button
+                  style={{
+                    marginLeft: "10px",
+                    backgroundColor:
+                      "red",
+                    color: "white",
+                  }}
+                  onClick={() =>
+                    eliminarUsuario(
+                      usuario.username
+                    )
+                  }
+                >
+                  Eliminar
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
