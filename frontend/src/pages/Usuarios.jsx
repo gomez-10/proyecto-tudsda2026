@@ -2,55 +2,69 @@ import { useState, useEffect } from "react";
 
 export default function Usuarios() {
   const [username, setUsername] = useState("");
-  const [usuarios, setUsuarios] = useState([]);
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("admin");
+  const [usuarios, setUsuarios] = useState([]);
+
   const cargarUsuarios = async () => {
-  try {
-    const token = localStorage.getItem("authorizationToken");
-
-    const response = await fetch(
-      "http://localhost:3000/api/users",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    setUsuarios(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-  const crearUsuario = async () => {
-    <hr />
     try {
-      const response = await fetch("http://localhost:3000/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          displayName,
-          email,
-          password,
-          role,
-        }),
-      });
+      const token = localStorage.getItem("authorizationToken");
+
+      const response = await fetch(
+        "http://localhost:3000/api/users",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await response.json();
 
-      console.log(data);
+      if (Array.isArray(data)) {
+        setUsuarios(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    cargarUsuarios();
+  }, []);
+
+  const crearUsuario = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            displayName,
+            email,
+            password,
+            role,
+          }),
+        }
+      );
+
+      const data = await response.json();
 
       if (response.ok) {
         alert("Usuario creado correctamente");
+
+        setUsername("");
+        setDisplayName("");
+        setEmail("");
+        setPassword("");
+
+        cargarUsuarios();
       } else {
         alert(data.error);
       }
@@ -63,9 +77,10 @@ export default function Usuarios() {
   return (
     <div style={{ padding: "20px" }}>
       <h1>👤 Crear Usuario</h1>
+
       <p>
-  Token guardado: {localStorage.getItem("authorizationToken")}
-</p>
+        Token guardado: {localStorage.getItem("authorizationToken")}
+      </p>
 
       <input
         placeholder="Usuario"
@@ -73,8 +88,7 @@ export default function Usuarios() {
         onChange={(e) => setUsername(e.target.value)}
       />
 
-      <br />
-      <br />
+      <br /><br />
 
       <input
         placeholder="Nombre para mostrar"
@@ -82,8 +96,7 @@ export default function Usuarios() {
         onChange={(e) => setDisplayName(e.target.value)}
       />
 
-      <br />
-      <br />
+      <br /><br />
 
       <input
         placeholder="Email"
@@ -91,8 +104,7 @@ export default function Usuarios() {
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <br />
-      <br />
+      <br /><br />
 
       <input
         type="password"
@@ -101,8 +113,7 @@ export default function Usuarios() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <br />
-      <br />
+      <br /><br />
 
       <select
         value={role}
@@ -112,12 +123,37 @@ export default function Usuarios() {
         <option value="user">user</option>
       </select>
 
-      <br />
-      <br />
+      <br /><br />
 
       <button onClick={crearUsuario}>
         Crear Usuario
       </button>
+
+      <hr />
+
+      <h2>Usuarios registrados</h2>
+
+      <table border="1" cellPadding="10">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {usuarios.map((usuario) => (
+            <tr key={usuario.username}>
+              <td>{usuario.username}</td>
+              <td>{usuario.displayName}</td>
+              <td>{usuario.email}</td>
+              <td>{usuario.role}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
