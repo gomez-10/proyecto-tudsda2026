@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 
 export default function Usuarios() {
@@ -16,19 +17,18 @@ export default function Usuarios() {
 
   const cargarUsuarios = async () => {
     try {
-   const token = await AsyncStorage.getItem(
-  "authorizationToken"
-);
+      const token = await AsyncStorage.getItem(
+        "authorizationToken"
+      );
 
-const response = await fetch(
-  "http://192.168.0.196:3000/api/users",
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
-
+      const response = await fetch(
+        "http://192.168.0.196:3000/api/users",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await response.json();
 
@@ -38,6 +38,31 @@ const response = await fetch(
     } catch (error) {
       console.log(error);
       alert("Error al cargar usuarios");
+    }
+  };
+
+  const eliminarUsuario = async (username: string) => {
+    try {
+      const token = await AsyncStorage.getItem(
+        "authorizationToken"
+      );
+
+      await fetch(
+        `http://192.168.0.196:3000/api/users/${username}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Usuario eliminado");
+
+      cargarUsuarios();
+    } catch (error) {
+      console.log(error);
+      alert("Error al eliminar usuario");
     }
   };
 
@@ -52,10 +77,32 @@ const response = await fetch(
           key={usuario.username}
           style={styles.card}
         >
-          <Text>Usuario: {usuario.username}</Text>
-          <Text>Nombre: {usuario.displayName}</Text>
-          <Text>Email: {usuario.email}</Text>
-          <Text>Rol: {usuario.role}</Text>
+          <Text>
+            Usuario: {usuario.username}
+          </Text>
+
+          <Text>
+            Nombre: {usuario.displayName}
+          </Text>
+
+          <Text>
+            Email: {usuario.email}
+          </Text>
+
+          <Text>
+            Rol: {usuario.role}
+          </Text>
+
+          <TouchableOpacity
+            style={styles.botonEliminar}
+            onPress={() =>
+              eliminarUsuario(usuario.username)
+            }
+          >
+            <Text style={styles.textoBoton}>
+              Eliminar Usuario
+            </Text>
+          </TouchableOpacity>
         </View>
       ))}
     </ScrollView>
@@ -79,5 +126,18 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     marginBottom: 10,
+  },
+
+  botonEliminar: {
+    marginTop: 10,
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 6,
+  },
+
+  textoBoton: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
   },
 });
