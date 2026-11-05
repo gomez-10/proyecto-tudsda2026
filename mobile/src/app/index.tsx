@@ -17,16 +17,24 @@ export default function HomeScreen() {
         <Text>📦 Productos</Text>
       </View>
 
-      <View style={styles.card}>
-        <Text>👤 Usuarios</Text>
-      </View>
+      <Pressable
+  style={styles.card}
+  onPress={() => router.push("/usuarios")}
+>
+  <Text>👤 Usuarios</Text>
+</Pressable>
 
-      <View style={styles.card}>
-        <Text>🔑 Sesiones</Text>
-      </View>
+      <Pressable
+  style={styles.card}
+  onPress={() => router.push("/sesiones")}
+>
+  <Text>🔑 Sesiones</Text>
+</Pressable>
 
  <Pressable
   style={styles.boton}
+  onPress={() => router.push("/login")}
+>
   onPress={() => router.push("/productos")}
 >
   <Text style={styles.textoBoton}>
