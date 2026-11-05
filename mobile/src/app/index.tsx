@@ -13,9 +13,12 @@ export default function HomeScreen() {
         Sistema de gestión de productos
       </Text>
 
-      <View style={styles.card}>
-        <Text>📦 Productos</Text>
-      </View>
+     <Pressable
+  style={styles.card}
+  onPress={() => router.push("/productos")}
+>
+  <Text>📦 Productos</Text>
+</Pressable>
 
       <Pressable
   style={styles.card}
@@ -40,11 +43,14 @@ export default function HomeScreen() {
   </Text>
 </Pressable>
 
-      <Pressable style={styles.boton}>
-        <Text style={styles.textoBoton}>
-          Iniciar Sesión
-        </Text>
-      </Pressable>
+     <Pressable
+  style={styles.boton}
+  onPress={() => router.push("/login")}
+>
+  <Text style={styles.textoBoton}>
+    Iniciar Sesión
+  </Text>
+</Pressable>
 
     </View>
   );
