@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -15,9 +16,19 @@ export default function Usuarios() {
 
   const cargarUsuarios = async () => {
     try {
-      const response = await fetch(
-        "http://192.168.0.196:3000/api/users"
-      );
+   const token = await AsyncStorage.getItem(
+  "authorizationToken"
+);
+
+const response = await fetch(
+  "http://192.168.0.196:3000/api/users",
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+
 
       const data = await response.json();
 

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import {
   View,
@@ -33,6 +34,10 @@ export default function Login() {
 
 
     if (data.authorizationToken) {
+        await AsyncStorage.setItem(
+  "authorizationToken",
+  data.authorizationToken
+);
       alert(`Bienvenido ${data.username} (${data.role})`);
     } else {
       alert(data.error || "Login incorrecto");
