@@ -29,11 +29,21 @@ export default function Login() {
     );
 
     const data = await response.json();
+   
 
     console.log(data);
 
 
     if (data.authorizationToken) {
+        await AsyncStorage.setItem(
+  "username",
+  data.username
+);
+
+await AsyncStorage.setItem(
+  "role",
+  data.role
+);
         await AsyncStorage.setItem(
   "authorizationToken",
   data.authorizationToken
