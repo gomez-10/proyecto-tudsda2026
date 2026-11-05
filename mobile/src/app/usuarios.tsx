@@ -1,55 +1,72 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 
 export default function Usuarios() {
+  const [usuarios, setUsuarios] = useState<any[]>([]);
+
+  useEffect(() => {
+    cargarUsuarios();
+  }, []);
+
+  const cargarUsuarios = async () => {
+    try {
+      const response = await fetch(
+        "http://192.168.0.196:3000/api/users"
+      );
+
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        setUsuarios(data);
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Error al cargar usuarios");
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>👤 Usuarios</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.titulo}>
+        👤 Usuarios
+      </Text>
 
-      <View style={styles.fila}>
-        <Text style={styles.encabezado}>Usuario</Text>
-        <Text style={styles.encabezado}>Rol</Text>
-      </View>
-
-      <View style={styles.fila}>
-        <Text>admin</Text>
-        <Text>admin</Text>
-      </View>
-
-      <View style={styles.fila}>
-        <Text>juan</Text>
-        <Text>user</Text>
-      </View>
-
-      <View style={styles.fila}>
-        <Text>maria</Text>
-        <Text>user</Text>
-      </View>
-    </View>
+      {usuarios.map((usuario) => (
+        <View
+          key={usuario.username}
+          style={styles.card}
+        >
+          <Text>Usuario: {usuario.username}</Text>
+          <Text>Nombre: {usuario.displayName}</Text>
+          <Text>Email: {usuario.email}</Text>
+          <Text>Rol: {usuario.role}</Text>
+        </View>
+      ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 20,
   },
 
   titulo: {
     fontSize: 28,
     fontWeight: "bold",
-    textAlign: "center",
     marginBottom: 20,
+    textAlign: "center",
   },
 
-  fila: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    borderBottomWidth: 1,
-    paddingVertical: 10,
-  },
-
-  encabezado: {
-    fontWeight: "bold",
+  card: {
+    backgroundColor: "#f5f5f5",
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
   },
 });
