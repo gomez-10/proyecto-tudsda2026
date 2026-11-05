@@ -41,7 +41,46 @@ export default function Usuarios() {
     }
   };
 
-  const eliminarUsuario = async (username: string) => {
+  const editarUsuario = async (
+    username: string,
+    role: string
+  ) => {
+    try {
+      const token = await AsyncStorage.getItem(
+        "authorizationToken"
+      );
+
+      const nuevoRol =
+        role === "admin" ? "user" : "admin";
+
+      await fetch(
+        `http://192.168.0.196:3000/api/users/${username}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            role: nuevoRol,
+          }),
+        }
+      );
+
+      alert(
+        `Rol actualizado a ${nuevoRol}`
+      );
+
+      cargarUsuarios();
+    } catch (error) {
+      console.log(error);
+      alert("Error al editar usuario");
+    }
+  };
+
+  const eliminarUsuario = async (
+    username: string
+  ) => {
     try {
       const token = await AsyncStorage.getItem(
         "authorizationToken"
@@ -58,7 +97,6 @@ export default function Usuarios() {
       );
 
       alert("Usuario eliminado");
-
       cargarUsuarios();
     } catch (error) {
       console.log(error);
@@ -94,9 +132,25 @@ export default function Usuarios() {
           </Text>
 
           <TouchableOpacity
+            style={styles.botonEditar}
+            onPress={() =>
+              editarUsuario(
+                usuario.username,
+                usuario.role
+              )
+            }
+          >
+            <Text style={styles.textoBoton}>
+              Editar Rol
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             style={styles.botonEliminar}
             onPress={() =>
-              eliminarUsuario(usuario.username)
+              eliminarUsuario(
+                usuario.username
+              )
             }
           >
             <Text style={styles.textoBoton}>
@@ -126,6 +180,13 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     marginBottom: 10,
+  },
+
+  botonEditar: {
+    marginTop: 10,
+    backgroundColor: "#2563eb",
+    padding: 10,
+    borderRadius: 6,
   },
 
   botonEliminar: {
