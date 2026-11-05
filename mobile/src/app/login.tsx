@@ -11,19 +11,37 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const iniciarSesion = () => {
-    if (!username || !password) {
-      alert("Complete usuario y contraseña");
-      return;
-    }
+ const iniciarSesion = async () => {
+  try {
+    const response = await fetch(
+      "http://192.168.0.196:3000/api/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      }
+    );
 
-    if (username === "admin") {
-      alert("Bienvenido Administrador");
+    const data = await response.json();
+
+    console.log(data);
+
+
+    if (data.authorizationToken) {
+      alert(`Bienvenido ${data.username} (${data.role})`);
     } else {
-      alert("Bienvenido Usuario");
+      alert(data.error || "Login incorrecto");
     }
-  };
-
+  } catch (error) {
+    console.log(error);
+    alert("Error al conectar con el servidor");
+  }
+};
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>🔐 Login Kiosco</Text>
