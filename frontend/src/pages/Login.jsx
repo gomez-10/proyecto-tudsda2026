@@ -4,13 +4,37 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-const ingresar = () => {
-  if (!username || !password) {
-    alert("Debe completar usuario y contraseña");
-    return;
-  }
+const ingresar = async () => {
+  try {
+    const response = await fetch("http://localhost:3000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
 
-  alert(`Bienvenido ${username}`);
+    const data = await response.json();
+
+    console.log(data);
+
+    if (data.authorizationToken) {
+      localStorage.setItem(
+        "authorizationToken",
+        data.authorizationToken
+      );
+
+      alert(`Bienvenido ${data.username}`);
+    } else {
+      alert(data.error || "Error al iniciar sesión");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error de conexión con el servidor");
+  }
 };
   return (
     <div style={{ padding: "20px" }}>
