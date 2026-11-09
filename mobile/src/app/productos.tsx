@@ -34,20 +34,22 @@ export default function Productos() {
         📦 Productos
       </Text>
 
-      <View style={styles.encabezado}>
-        <Text style={styles.headerText}>Nombre</Text>
-        <Text style={styles.headerText}>Precio</Text>
-        <Text style={styles.headerText}>Stock</Text>
-      </View>
-
       {productos.map((producto) => (
         <View
           key={producto._id}
-          style={styles.fila}
+          style={styles.card}
         >
-          <Text>{producto.nombre}</Text>
-          <Text>${producto.precio}</Text>
-          <Text>{producto.stock}</Text>
+          <Text>
+            Nombre: {producto.nombre}
+          </Text>
+
+          <Text>
+            Precio: ${producto.precio}
+          </Text>
+
+          <Text>
+            Stock: {producto.stock}
+          </Text>
         </View>
       ))}
 
@@ -72,22 +74,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  encabezado: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    borderBottomWidth: 2,
-    paddingBottom: 10,
+  card: {
+    backgroundColor: "#f5f5f5",
+    padding: 15,
+    borderRadius: 8,
     marginBottom: 10,
-  },
-
-  headerText: {
-    fontWeight: "bold",
-  },
-
-  fila: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
   },
 });
