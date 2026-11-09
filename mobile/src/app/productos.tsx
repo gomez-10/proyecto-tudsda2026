@@ -7,7 +7,7 @@ import {
 } from "react-native";
 
 export default function Productos() {
-  const [productos, setProductos] = useState<any[]>([]);
+ const [productos, setProductos] = useState<any[]>([]);
 
   useEffect(() => {
     cargarProductos();
